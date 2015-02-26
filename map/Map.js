@@ -3,8 +3,7 @@
  * Initializes empty lists for regions and super regions
  */
 function Map () {
-
-  if (false === (this instanceof Map)) {
+  if (!(this instanceof Map)) {
     return new Map(arguments)
   }
 
@@ -18,8 +17,7 @@ function Map () {
  * @param int id
  * @return Region || null
  */
-Map.prototype.getRegionById = function (id) {
-
+Map.prototype.getRegionById = function getRegionById (id) {
   if (this.regions.hasOwnProperty(id)) {
     return this.regions[id]
   }
@@ -33,8 +31,7 @@ Map.prototype.getRegionById = function (id) {
  * @param int id
  * @return SuperRegion || null
  */
-Map.prototype.getSuperRegionById = function (id) {
-
+Map.prototype.getSuperRegionById = function getSuperRegionById (id) {
   if (this.superRegions.hasOwnProperty(id)) {
     return this.superRegions[id]
   }
@@ -48,21 +45,19 @@ Map.prototype.getSuperRegionById = function (id) {
  * @param String owner
  * @return Array
  */
-Map.prototype.getOwnedRegions = function (owner) {
-
+Map.prototype.getOwnedRegions = function getOwnedRegions (owner) {
   var i,
     region,
     ownedRegions = []
 
   for (i in this.regions) {
-
     if (this.regions.hasOwnProperty(i)) {
       region = this.regions[i]
 
       if (region.owner === owner) {
         ownedRegions.push(region)
       }
-    }       
+    }
   }
 
   return ownedRegions

@@ -7,8 +7,7 @@ var PossibleOwners = require('./PossibleOwners.js')
  * @param SuperRegion superRegion
  */
 function Region (id, superRegion) {
-
-  if (false === ( this instanceof Region)) {
+  if (!( this instanceof Region)) {
     return new Region(arguments)
   }
 

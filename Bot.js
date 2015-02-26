@@ -12,15 +12,13 @@ var readline = require('readline')
 var GameMap = require('./map/Map.js')
 var SuperRegion = require('./map/SuperRegion.js')
 var Region = require('./map/Region.js')
-var PossibleOwners = require('./map/PossibleOwners.js')
 
 /**
  * Main class
  * Initializes a map instance and an empty settings object
  */
 function Bot () {
-
-  if (false === (this instanceof Bot)) {
+  if (!(this instanceof Bot)) {
     return new Bot()
   }
 
@@ -32,13 +30,12 @@ function Bot () {
 }
 
 /**
- * 
+ *
  */
-Bot.prototype.run = function () {
-  
+Bot.prototype.run = function run () {
   var io = readline.createInterface(process.stdin, process.stdout)
 
-  io.on('line', function (data) {
+  io.on('line', function onLine (data) {
     // stop if line doesn't contain anything
     if (data.length === 0) {
       return
@@ -46,8 +43,7 @@ Bot.prototype.run = function () {
 
     var lines = data.trim().split('\n')
 
-    while (0 < lines.length) {
-
+    while (lines.length > 0) {
       var line = lines.shift().trim()
       var lineParts = line.split(" ")
 
@@ -57,23 +53,27 @@ Bot.prototype.run = function () {
       }
 
       // get the input command and convert to camel case
-      var command = lineParts.shift().toCamelCase()
+      var command = toCamelCase(lineParts.shift())
 
       // invoke command if function exists and pass the data along
       // then return response if exists
       if (command in bot) {
         var response = bot[command](lineParts)
 
-        if (response && 0 < response.length) {
+        if (response && response.length > 0) {
           console.log(response)
         }
       } else {
-        console.error('Unable to execute command: ' + command + ', with data: ' + lineParts)
+        console.error(
+          'Unable to execute command: %s, with data: %2',
+          command,
+          lineParts
+        )
       }
     }
   })
 
-  io.on('close', function () {
+  io.on('close', function onClose () {
     process.exit(0)
   })
 }
@@ -82,7 +82,7 @@ Bot.prototype.run = function () {
  * Respond to settings command
  * @param Array data
  */
-Bot.prototype.settings = function (data) {
+Bot.prototype.settings = function settings (data) {
   var key = data[0],
     value = data[1]
 
@@ -90,9 +90,8 @@ Bot.prototype.settings = function (data) {
   this.options[key] = value
 }
 
-Bot.prototype.setupMap = function (data) {
-
-  var command = ('setup_' + data.shift()).toCamelCase()
+Bot.prototype.setupMap = function setupMap (data) {
+  var command = toCamelCase('setup_' + data.shift())
 
   if (command in bot) {
     bot[command](data)
@@ -107,8 +106,7 @@ Bot.prototype.setupMap = function (data) {
  *
  * @param Array data
  */
-Bot.prototype.setupSuperRegions = function (data) {
-
+Bot.prototype.setupSuperRegions = function setupSuperRegions (data) {
   var i,
     continentId,
     continentBonus
@@ -132,14 +130,13 @@ Bot.prototype.setupSuperRegions = function (data) {
  *
  * @param Array data
  */
-Bot.prototype.setupRegions = function (data) {
+Bot.prototype.setupRegions = function setupRegions (data) {
   var i,
     regionId,
     continentId
 
   // loop through data in pairs of two
   for (i = 0; i + 1 < data.length; i += 2) {
-
     // get region id
     regionId = parseInt(data[i], 10)
 
@@ -157,7 +154,7 @@ Bot.prototype.setupRegions = function (data) {
  *
  * @param Array data
  */
-Bot.prototype.setupNeighbors = function (data) {
+Bot.prototype.setupNeighbors = function setupNeighbors (data) {
   var i,
     j,
     region,
@@ -167,7 +164,6 @@ Bot.prototype.setupNeighbors = function (data) {
 
   // loop through data in pairs of two
   for (i = 0; i + 1 < data.length; i += 2) {
-
     // get region by id
     regionId = parseInt(data[i], 10)
     region = this.map.getRegionById(regionId)
@@ -176,17 +172,16 @@ Bot.prototype.setupNeighbors = function (data) {
     neighborIds = data[i + 1].replace('[', '').replace(']', '').split(',')
 
     for (j = 0; j < neighborIds.length; j++) {
-
       // get the neighbor by Id
-      neigborId = parseInt(neighborIds[j], 10);
-      neighbor = this.map.getRegionById(neigborId);
+      var neigborId = parseInt(neighborIds[j], 10)
+      neighbor = this.map.getRegionById(neigborId)
 
       // connect region with its neighbor
-      neighbor.neighbors.push(region);
-      region.neighbors.push(neighbor);
+      neighbor.neighbors.push(region)
+      region.neighbors.push(neighbor)
     }
   }
-};
+}
 
 /**
  * Bot.setupWastelands
@@ -194,22 +189,21 @@ Bot.prototype.setupNeighbors = function (data) {
  *
  * @param Array data
  */
-Bot.prototype.setupWastelands = function (data) {
+Bot.prototype.setupWastelands = function setupWastelands (data) {
   var i,
     region,
-    regionId;
+    regionId
 
   // loop through data in pairs of two
   for (i = 0; i < data.length; i += 1) {
-
     // get region by id
-    regionId = parseInt(data[i], 10);
-    region = this.map.getRegionById(regionId);
+    regionId = parseInt(data[i], 10)
+    region = this.map.getRegionById(regionId)
 
     // this really shouldn't be hard coded
-    region.troopCount = 10;
+    region.troopCount = 10
   }
-};
+}
 
 /**
  * Bot.updateMap
@@ -217,25 +211,24 @@ Bot.prototype.setupWastelands = function (data) {
  *
  * @param Array data
  */
-Bot.prototype.updateMap = function (data) {
+Bot.prototype.updateMap = function updateMap (data) {
   var i,
     region,
-    regionId;
+    regionId
 
   // loop through data in pais of three
   for (i = 0; i < data.length; i += 3) {
-
     // get region by id
-    regionId = parseInt(data[i], 10);
-    region = this.map.getRegionById(regionId);
+    regionId = parseInt(data[i], 10)
+    region = this.map.getRegionById(regionId)
 
     // update region owner
-    region.owner = data[i + 1];
+    region.owner = data[i + 1]
 
     // update troopcount
-    region.troopCount = parseInt(data[i + 2], 10);
+    region.troopCount = parseInt(data[i + 2], 10)
   }
-};
+}
 
 /**
  * Bot.pickStartingRegion
@@ -245,14 +238,13 @@ Bot.prototype.updateMap = function (data) {
  * @param Array data
  * @return String
  */
-Bot.prototype.pickStartingRegion = function (data) {
-
+Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
   // shuffle the regions and return the first item
-  var randomRegion = data.shuffle().slice(0, 1);
+  var randomRegion = data.shuffle().slice(0, 1)
 
   // parse to string
-  return '' + randomRegion;
-};
+  return '' + randomRegion
+}
 
 /**
  * Bot.go
@@ -261,18 +253,18 @@ Bot.prototype.pickStartingRegion = function (data) {
  * @param Array data
  * @return string
  */
-Bot.prototype.go = function (data) {
+Bot.prototype.go = function go (data) {
   // get the input command and convert to camel case
-  command = data.shift().toCamelCase();
+  var command = toCamelCase(data.shift())
 
   // invoke command if function exists and pass the data along
   // then return response if exists
   if (command in bot) {
-    return bot[command](data);
+    return bot[command](data)
   } else {
-    console.error('Unable to understand command: ' + command + ', with data: ' + data);
+    console.error('Unable to understand command: ' + command + ', with data: ' + data)
   }
-};
+}
 
 /**
  * Bot.placeArmies
@@ -281,40 +273,39 @@ Bot.prototype.go = function (data) {
  * @param Array data
  * @return string
  */
-Bot.prototype.placeArmies = function (data) {
+Bot.prototype.placeArmies = function placeArmies () {
   var i,
     region,
     parsedPlacements = '',
     placements = [],
     regionIndex = 0,
     troopsRemaining = parseInt(this.options.starting_armies, 10),
-    ownedRegions = this.map.getOwnedRegions(this.options.your_bot);
+    ownedRegions = this.map.getOwnedRegions(this.options.your_bot)
 
-  while (0 < troopsRemaining) {
-
+  while (troopsRemaining > 0) {
     // get a random region
-    regionIndex = Math.floor(Math.random() * ownedRegions.length);
-    region = ownedRegions[regionIndex];
+    regionIndex = Math.floor(Math.random() * ownedRegions.length)
+    region = ownedRegions[regionIndex]
 
     // place a single army
-    placements.push([region.id, 1]);
+    placements.push([region.id, 1])
 
-    region.troopCount += 1;
-    troopsRemaining -= 1;
-    regionIndex += 1;
+    region.troopCount += 1
+    troopsRemaining -= 1
+    regionIndex += 1
   }
 
   // parse the placements
   for (i = 0; i < placements.length; i++) {
-    parsedPlacements += this.options.your_bot + ' place_armies ' + placements[i].join(' ');
+    parsedPlacements += this.options.your_bot + ' place_armies ' + placements[i].join(' ')
 
     if (i < placements.length - 1) {
-      parsedPlacements += ', ';
+      parsedPlacements += ', '
     }
   }
 
-  return parsedPlacements;
-};
+  return parsedPlacements
+}
 
 /**
  * Bot.attackTransfer
@@ -323,84 +314,79 @@ Bot.prototype.placeArmies = function (data) {
  * @param Array data
  * @return string
  */
-Bot.prototype.attackTransfer = function (data) {
+Bot.prototype.attackTransfer = function attackTransfer () {
   var moves = [],
     ownedRegions = this.map.getOwnedRegions(this.options.your_bot),
     i,
     n,
-    neighbors,
     parsedMoves = '',
     region,
-    targetRegion;
+    targetRegion
 
-  for(i = 0; i < ownedRegions.length; i++) {
-    region = ownedRegions[i];
-    
+  for (i = 0; i < ownedRegions.length; i++) {
+    region = ownedRegions[i]
+
     // attack neighboring enemy / neutral region if troopCount > 6
     if (region.troopCount > 6) {
-
       // shuffle the neighbours for some randomness
       for (n in region.neighbors.shuffle()) {
-
         // continue with the next iteration if n is a property of the neighbors array,
         // instead of an item in the array
         if (!region.neighbors.hasOwnProperty(n)) {
-          continue;
+          continue
         }
 
         // set the target region
-        targetRegion = region.neighbors[n];
+        targetRegion = region.neighbors[n]
 
         // attack with all available troops if target region is not owned by bot
         if (this.options.your_bot !== targetRegion.owner) {
-          moves.push([region.id, targetRegion.id, region.troopCount - 1]);
-          region.troopCount = 1;
-          break;
+          moves.push([region.id, targetRegion.id, region.troopCount - 1])
+          region.troopCount = 1
+          break
         }
       }
     }
 
     // transfer troops to neighboring friendly region if troopCount > 1
     if (region.troopCount > 1) {
-
       // shuffle the neighbours for some randomness
       for (n in region.neighbors.shuffle()) {
-
         // continue with the next iteration if n is a property of the neighbors array,
         // instead of an item in the array
         if (!region.neighbors.hasOwnProperty(n)) {
-          continue;
+          continue
         }
 
         // set the target region
-        targetRegion = region.neighbors[n];
+        targetRegion = region.neighbors[n]
 
         // transfer all available troops if target region is owned by bot
         if (this.options.your_bot === targetRegion.owner) {
-          moves.push([region.id, targetRegion.id, region.troopCount - 1]);
-          region.troopCount = 1;
-          break;
+          moves.push([region.id, targetRegion.id, region.troopCount - 1])
+          region.troopCount = 1
+          break
         }
       }
     }
   }
 
   // Return 'No moves' if no moves are made
-  if (0 === moves.length) {
-    return 'No moves';
+  if (moves.length === 0) {
+    return 'No moves'
   }
 
   // Else parse the moves
   for (i = 0; i < moves.length; i++) {
-    parsedMoves += this.options.your_bot + ' attack/transfer ' + moves[i].join(' ');
+    parsedMoves += this.options.your_bot + ' attack/transfer ' + moves[i].join(' ')
 
     if (i < moves.length - 1) {
-      parsedMoves += ',';
+      parsedMoves += ','
     }
   }
 
-  return parsedMoves; 
-};
+  return parsedMoves
+}
 
 /**
  * Bot.opponentMoves
@@ -408,29 +394,31 @@ Bot.prototype.attackTransfer = function (data) {
  *
  * @param Array data
  */
-Bot.prototype.opponentMoves = function (data) {
+Bot.prototype.opponentMoves = function opponentMoves (data) {
+  console.error('opponentMoves:', data)
+}
 
-};
+Array.prototype.shuffle = function shuffle () {
+  var o = this
 
-Array.prototype.shuffle = function () {
+  for (
+    var j, x, i = o.length;
+    i;
+    j = parseInt(Math.random() * i, 10), x = o[--i], o[i] = o[j], o[j] = x
+  )
 
-  var o = this;
+  return o
+}
 
-  for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-
-  return o;
-};
-
-String.prototype.toCamelCase = function () {
-
-  return this.replace('/', '_').replace(/_[a-z]/g, function (match) {
-    return match.toUpperCase().replace('_', '');
-  });
-};
+function toCamelCase (input) {
+  return input.replace('/', '_').replace(/_[a-z]/g, function replacer (match) {
+    return match.toUpperCase().replace('_', '')
+  })
+}
 
 /**
  * Initialize bot
  * __main__
  */
-var bot = new Bot();
-bot.run();
+var bot = new Bot()
+bot.run()

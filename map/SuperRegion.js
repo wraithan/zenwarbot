@@ -6,8 +6,7 @@
  * @param int worth
  */
 function SuperRegion (id, bonus) {
-
-    if (false === ( this instanceof SuperRegion)) {
+    if (!(this instanceof SuperRegion)) {
         return new SuperRegion(arguments)
     }
 
