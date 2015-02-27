@@ -1,17 +1,18 @@
-/**
- * Warlight AI Game Bot
- *
- * Last update: December 17, 2014
- *
- * @author Niko van Meurs
- * @version 2.0
- * @License MIT License (http://opensource.org/Licenses/MIT)
- */
-
 var readline = require('readline')
 var GameMap = require('./map/Map.js')
 var SuperRegion = require('./map/SuperRegion.js')
 var Region = require('./map/Region.js')
+
+module.exports = Bot
+
+/**
+ * Initialize bot
+ * __main__
+ */
+if (require.main === module) {
+  var bot = new Bot()
+  bot.run()
+}
 
 /**
  * Main class
@@ -29,65 +30,65 @@ function Bot () {
   this.map = new GameMap()
 }
 
-/**
- *
- */
 Bot.prototype.run = function run () {
   var io = readline.createInterface(process.stdin, process.stdout)
 
-  io.on('line', function onLine (data) {
-    // stop if line doesn't contain anything
-    if (data.length === 0) {
-      return
-    }
-
-    var lines = data.trim().split('\n')
-
-    while (lines.length > 0) {
-      var line = lines.shift().trim()
-      var lineParts = line.split(" ")
-
-      // stop if lineParts doesn't contain anything
-      if (lineParts.length === 0) {
-        return
-      }
-
-      // get the input command and convert to camel case
-      var command = toCamelCase(lineParts.shift())
-
-      // invoke command if function exists and pass the data along
-      // then return response if exists
-      if (command in bot) {
-        var response = bot[command](lineParts)
-
-        if (response && response.length > 0) {
-          console.log(response)
-        }
-      } else {
-        console.error(
-          'Unable to execute command: %s, with data: %2',
-          command,
-          lineParts
-        )
-      }
-    }
-  })
+  io.on('line', this.processLine.bind(this))
 
   io.on('close', function onClose () {
     process.exit(0)
   })
 }
 
-/**
- * Respond to settings command
- * @param Array data
- */
-Bot.prototype.settings = function settings (data) {
-  var key = data[0],
-    value = data[1]
+Bot.prototype.processLine = function processLine (data) {
+  // stop if line doesn't contain anything
+  if (data.length === 0) {
+    return
+  }
 
-  // set key to value
-  this.options[key] = value
+  var lineParts = data.trim().split(' ')
+
+  // stop if lineParts doesn't contain anything
+  if (lineParts.length === 0) {
+    return
+  }
+
+  var command = lineParts.shift()
+
+  switch (command) {
+    case 'settings':
+      switch (lineParts[0]) {
+        case 'max_rounds':
+        case 'starting_armies':
+        case 'starting_pick_amount':
+        case 'time_per_move':
+        case 'timebank':
+          this.options[lineParts[0]] = parseInt(lineParts[1], 10)
+          break
+        case 'starting_regions':
+          this.options[lineParts.shift()] = lineParts
+          break
+        default:
+          this.options[lineParts[0]] = lineParts[1]
+      }
+
+      break
+
+    default:
+      var camelCommand = toCamelCase(command)
+
+      if (camelCommand in bot) {
+        var response = bot[camelCommand](lineParts)
+
+        if (response && response.length > 0) {
+          process.stdout.write(response)
+        }
+      } else {
+        process.stderr.write(
+          'Unable to execute command: ' + camelCommand + ' with data: ' + lineParts
+        )
+      }
+  }
 }
 
 Bot.prototype.setupMap = function setupMap (data) {
@@ -96,7 +97,9 @@ Bot.prototype.setupMap = function setupMap (data) {
   if (command in bot) {
     bot[command](data)
   } else {
-    console.error('Unable to understand command: ' + command + ', with data: ' + data)
+    process.stderr.write(
+      'Unable to understand command: ' + command + ', with data: ' + data
+    )
   }
 }
 
@@ -190,18 +193,11 @@ Bot.prototype.setupNeighbors = function setupNeighbors (data) {
  * @param Array data
  */
 Bot.prototype.setupWastelands = function setupWastelands (data) {
-  var i,
-    region,
-    regionId
-
-  // loop through data in pairs of two
-  for (i = 0; i < data.length; i += 1) {
-    // get region by id
-    regionId = parseInt(data[i], 10)
-    region = this.map.getRegionById(regionId)
+  for (var i = 0; i < data.length; ++i) {
+    var region = this.map.getRegionById(parseInt(data[i], 10))
 
     // this really shouldn't be hard coded
-    region.troopCount = 10
+    region.troopCount = 6
   }
 }
 
@@ -212,15 +208,10 @@ Bot.prototype.setupWastelands = function setupWastelands (data) {
  * @param Array data
  */
 Bot.prototype.updateMap = function updateMap (data) {
-  var i,
-    region,
-    regionId
-
-  // loop through data in pais of three
-  for (i = 0; i < data.length; i += 3) {
+  // loop through data in sets of three
+  for (var i = 0; i < data.length; i += 3) {
     // get region by id
-    regionId = parseInt(data[i], 10)
-    region = this.map.getRegionById(regionId)
+    var region = this.map.getRegionById(parseInt(data[i], 10))
 
     // update region owner
     region.owner = data[i + 1]
@@ -240,7 +231,7 @@ Bot.prototype.updateMap = function updateMap (data) {
  */
 Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
   // shuffle the regions and return the first item
-  var randomRegion = data.shuffle().slice(0, 1)
+  var randomRegion = shuffle(data).slice(0, 1)
 
   // parse to string
   return '' + randomRegion
@@ -254,16 +245,14 @@ Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
  * @return string
  */
 Bot.prototype.go = function go (data) {
-  // get the input command and convert to camel case
   var command = toCamelCase(data.shift())
-
-  // invoke command if function exists and pass the data along
-  // then return response if exists
-  if (command in bot) {
-    return bot[command](data)
-  } else {
-    console.error('Unable to understand command: ' + command + ', with data: ' + data)
+  if (!(command in bot)) {
+    process.stderr.write(
+      'Unable to understand command: ' + command + ', with data: ' + data
+    )
   }
+
+  return bot[command](data)
 }
 
 /**
@@ -325,11 +314,12 @@ Bot.prototype.attackTransfer = function attackTransfer () {
 
   for (i = 0; i < ownedRegions.length; i++) {
     region = ownedRegions[i]
+    var neighbors = shuffle(region.neighbors)
 
     // attack neighboring enemy / neutral region if troopCount > 6
     if (region.troopCount > 6) {
       // shuffle the neighbours for some randomness
-      for (n in region.neighbors.shuffle()) {
+      for (n in neighbors) {
         // continue with the next iteration if n is a property of the neighbors array,
         // instead of an item in the array
         if (!region.neighbors.hasOwnProperty(n)) {
@@ -351,7 +341,7 @@ Bot.prototype.attackTransfer = function attackTransfer () {
     // transfer troops to neighboring friendly region if troopCount > 1
     if (region.troopCount > 1) {
       // shuffle the neighbours for some randomness
-      for (n in region.neighbors.shuffle()) {
+      for (n in neighbors) {
         // continue with the next iteration if n is a property of the neighbors array,
         // instead of an item in the array
         if (!region.neighbors.hasOwnProperty(n)) {
@@ -395,19 +385,17 @@ Bot.prototype.attackTransfer = function attackTransfer () {
  * @param Array data
  */
 Bot.prototype.opponentMoves = function opponentMoves (data) {
-  console.error('opponentMoves:', data)
+  process.stderr.write('opponentMoves:', data)
 }
 
-Array.prototype.shuffle = function shuffle () {
-  var o = this
-
+function shuffle (arr) {
   for (
-    var j, x, i = o.length;
+    var j, x, i = arr.length;
     i;
-    j = parseInt(Math.random() * i, 10), x = o[--i], o[i] = o[j], o[j] = x
-  )
+    j = parseInt(Math.random() * i, 10), x = arr[--i], arr[i] = arr[j], arr[j] = x
+  ) {}
 
-  return o
+  return arr
 }
 
 function toCamelCase (input) {
@@ -415,10 +403,3 @@ function toCamelCase (input) {
     return match.toUpperCase().replace('_', '')
   })
 }
-
-/**
- * Initialize bot
- * __main__
- */
-var bot = new Bot()
-bot.run()

@@ -6,13 +6,13 @@
  * @param int worth
  */
 function SuperRegion (id, bonus) {
-    if (!(this instanceof SuperRegion)) {
-        return new SuperRegion(arguments)
-    }
+  if (!(this instanceof SuperRegion)) {
+    return new SuperRegion(arguments)
+  }
 
-    this.id = id
-    this.bonus = bonus
-    this.regions = {}
+  this.id = id
+  this.bonus = bonus
+  this.regions = {}
 }
 
 module.exports = SuperRegion

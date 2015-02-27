@@ -34,6 +34,7 @@
     "no-mixed-requires": 2,
     "no-multiple-empty-lines": 2,
     "no-new": 2,
+    "no-process-exit": 0,
     "no-shadow": 1,
     "no-undef": 2,
     "no-underscore-dangle": 0,

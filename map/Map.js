@@ -46,17 +46,13 @@ Map.prototype.getSuperRegionById = function getSuperRegionById (id) {
  * @return Array
  */
 Map.prototype.getOwnedRegions = function getOwnedRegions (owner) {
-  var i,
-    region,
-    ownedRegions = []
+  var ownedRegions = []
 
-  for (i in this.regions) {
-    if (this.regions.hasOwnProperty(i)) {
-      region = this.regions[i]
+  for (var i in this.regions) {
+    var region = this.regions[i]
 
-      if (region.owner === owner) {
-        ownedRegions.push(region)
-      }
+    if (region.owner === owner) {
+      ownedRegions.push(region)
     }
   }
 
