@@ -7,7 +7,11 @@
     "test": "test"
   },
   "scripts": {
-    "test": "tap test/**/*.js"
+    "build": "npm run test && npm run package",
+    "watch": "nodemon -e js,eslintrc,json --exec 'npm run test'",
+    "test": "eslint . && tap test/**/*.js",
+    "package": "npm run bump && rm ../zenwarbot.zip && zip -r ../zenwarbot ./*",
+    "bump": "npm version major"
   },
   "repository": {
     "type": "git",

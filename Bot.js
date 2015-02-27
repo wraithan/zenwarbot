@@ -388,7 +388,9 @@ function shuffle (arr) {
     var j, x, i = arr.length;
     i;
     j = parseInt(Math.random() * i, 10), x = arr[--i], arr[i] = arr[j], arr[j] = x
-  ) {}
+  ) {
+    continue
+  }
 
   return arr
 }
