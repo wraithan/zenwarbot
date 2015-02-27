@@ -1,0 +1,29 @@
+{
+  "name": "zenwarbot",
+  "version": "1.0.0",
+  "description": "mah boot",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "tap test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wraithan/zenwarbot.git"
+  },
+  "author": "Wraithan <xwraithanx@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wraithan/zenwarbot/issues"
+  },
+  "homepage": "https://github.com/wraithan/zenwarbot",
+  "dependencies": {
+    "split": "^0.3.3"
+  },
+  "devDependencies": {
+    "tap": "^0.7.1",
+    "through": "^2.3.6"
+  }
+}
