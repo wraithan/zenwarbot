@@ -1,4 +1,4 @@
-var readline = require('readline')
+var split = require('split')
 var GameMap = require('./map/Map.js')
 var SuperRegion = require('./map/SuperRegion.js')
 var Region = require('./map/Region.js')
@@ -6,38 +6,26 @@ var Region = require('./map/Region.js')
 module.exports = Bot
 
 /**
- * Initialize bot
- * __main__
- */
-if (require.main === module) {
-  var bot = new Bot()
-  bot.run()
-}
-
-/**
  * Main class
  * Initializes a map instance and an empty settings object
  */
-function Bot () {
+function Bot (input, output) {
   if (!(this instanceof Bot)) {
     return new Bot()
   }
+
+  // Will have a stream in real life, but might not have one in testing
+  if (input) {
+    input.pipe(split()).on('data', this.processLine.bind(this))
+  }
+
+  this.output = output
 
   // initialize options object
   this.options = {}
 
   // initialize map
   this.map = new GameMap()
-}
-
-Bot.prototype.run = function run () {
-  var io = readline.createInterface(process.stdin, process.stdout)
-
-  io.on('line', this.processLine.bind(this))
-
-  io.on('close', function onClose () {
-    process.exit(0)
-  })
 }
 
 Bot.prototype.processLine = function processLine (data) {
@@ -52,50 +40,56 @@ Bot.prototype.processLine = function processLine (data) {
   if (lineParts.length === 0) {
     return
   }
+  debugger
+  this.processCommand(lineParts.shift(), lineParts)
 
-  var command = lineParts.shift()
+}
 
+Bot.prototype.processCommand = function processCommand (command, data) {
   switch (command) {
     case 'settings':
-      switch (lineParts[0]) {
-        case 'max_rounds':
-        case 'starting_armies':
-        case 'starting_pick_amount':
-        case 'time_per_move':
-        case 'timebank':
-          this.options[lineParts[0]] = parseInt(lineParts[1], 10)
-          break
-        case 'starting_regions':
-          this.options[lineParts.shift()] = lineParts
-          break
-        default:
-          this.options[lineParts[0]] = lineParts[1]
-      }
-
+      this.processSetting(data.shift(), data)
       break
 
     default:
       var camelCommand = toCamelCase(command)
 
-      if (camelCommand in bot) {
-        var response = bot[camelCommand](lineParts)
+      if (camelCommand in this) {
+        var response = this[camelCommand](data)
 
         if (response && response.length > 0) {
-          process.stdout.write(response)
+          this.output.write(response)
         }
       } else {
         process.stderr.write(
-          'Unable to execute command: ' + camelCommand + ' with data: ' + lineParts
+          'Unable to execute command: ' + camelCommand + ' with data: ' + data
         )
       }
+  }
+}
+
+Bot.prototype.processSetting = function processSetting (setting, value) {
+  switch (setting) {
+    case 'max_rounds':
+    case 'starting_armies':
+    case 'starting_pick_amount':
+    case 'time_per_move':
+    case 'timebank':
+      this.options[setting] = parseInt(value[0], 10)
+      break
+    case 'starting_regions':
+      this.options[setting] = value
+      break
+    default:
+      this.options[setting] = value[0]
   }
 }
 
 Bot.prototype.setupMap = function setupMap (data) {
   var command = toCamelCase('setup_' + data.shift())
 
-  if (command in bot) {
-    bot[command](data)
+  if (command in this) {
+    this[command](data)
   } else {
     process.stderr.write(
       'Unable to understand command: ' + command + ', with data: ' + data
@@ -230,7 +224,8 @@ Bot.prototype.updateMap = function updateMap (data) {
  * @return String
  */
 Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
-  // shuffle the regions and return the first item
+  // drop the time left
+  data.shift()
   var randomRegion = shuffle(data).slice(0, 1)
 
   // parse to string
@@ -246,13 +241,13 @@ Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
  */
 Bot.prototype.go = function go (data) {
   var command = toCamelCase(data.shift())
-  if (!(command in bot)) {
+  if (!(command in this)) {
     process.stderr.write(
       'Unable to understand command: ' + command + ', with data: ' + data
     )
   }
 
-  return bot[command](data)
+  return this[command](data)
 }
 
 /**
