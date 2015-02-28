@@ -16,8 +16,18 @@ function Region (id, superRegion) {
   this.owner = PossibleOwners.NEUTRAL
   this.neighbors = []
   this.troopCount = 2
-  this.isOnEmpireBorder = false
   this.isOnSuperRegionBorder = false
+}
+
+Region.prototype.anyNeighbors = function anyNeighbors(opponent) {
+  var found = false
+  for (var n in this.neighbors) {
+    if (n.owner === opponent) {
+      found = true
+      break
+    }
+  }
+  return found
 }
 
 module.exports = Region

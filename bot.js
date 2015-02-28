@@ -303,20 +303,17 @@ Bot.prototype.placeArmies = function placeArmies () {
  * @return string
  */
 Bot.prototype.attackTransfer = function attackTransfer () {
-  var moves = [],
-    ownedRegions = this.map.getOwnedRegions(this.options.your_bot),
-    i,
-    n,
-    parsedMoves = '',
-    region,
-    targetRegion
+  var moves = []
+  var ownedRegions = this.map.getOwnedRegions(this.options.your_bot)
+  var n
+  var targetRegion
 
-  for (i = 0; i < ownedRegions.length; i++) {
-    region = ownedRegions[i]
+  for (var i = 0; i < ownedRegions.length; i++) {
+    var region = ownedRegions[i]
     var neighbors = shuffle(region.neighbors)
 
     // attack neighboring enemy / neutral region if troopCount > 6
-    if (region.troopCount > 6) {
+    if (region.troopCount > 4) {
       // shuffle the neighbours for some randomness
       for (n in neighbors) {
         // continue with the next iteration if n is a property of the neighbors array,
@@ -330,15 +327,17 @@ Bot.prototype.attackTransfer = function attackTransfer () {
 
         // attack with all available troops if target region is not owned by bot
         if (this.options.your_bot !== targetRegion.owner) {
-          moves.push([region.id, targetRegion.id, region.troopCount - 1])
-          region.troopCount = 1
-          break
+          if (region.troopCount > (n.troopCount * (10 / 7))) {
+            moves.push([region.id, targetRegion.id, region.troopCount - 1])
+            region.troopCount = 1
+            break
+          }
         }
       }
     }
 
     // transfer troops to neighboring friendly region if troopCount > 1
-    if (region.troopCount > 1) {
+    if (region.troopCount > 1 && !region.anyNeighbors(this.options.opponent_bot)) {
       // shuffle the neighbours for some randomness
       for (n in neighbors) {
         // continue with the next iteration if n is a property of the neighbors array,
@@ -364,7 +363,7 @@ Bot.prototype.attackTransfer = function attackTransfer () {
   if (moves.length === 0) {
     return 'No moves'
   }
-
+  var parsedMoves = ''
   // Else parse the moves
   for (i = 0; i < moves.length; i++) {
     parsedMoves += this.options.your_bot + ' attack/transfer ' + moves[i].join(' ')
