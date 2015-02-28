@@ -13,6 +13,7 @@ function SuperRegion (id, bonus) {
   this.id = id
   this.bonus = bonus
   this.regions = {}
+  this.wastelands = 0
 }
 
 module.exports = SuperRegion

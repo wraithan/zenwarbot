@@ -134,7 +134,7 @@ Bot.prototype.setupSuperRegions = function setupSuperRegions (data) {
 Bot.prototype.setupRegions = function setupRegions (data) {
   var i,
     regionId,
-    continentId
+    continent
 
   // loop through data in pairs of two
   for (i = 0; i + 1 < data.length; i += 2) {
@@ -142,10 +142,10 @@ Bot.prototype.setupRegions = function setupRegions (data) {
     regionId = parseInt(data[i], 10)
 
     // get continent id
-    continentId = parseInt(data[i + 1], 10)
+    continent = this.map.getSuperRegionById(parseInt(data[i + 1], 10))
 
     // store region in regions object
-    this.map.regions[regionId] = new Region(regionId, continentId)
+    this.map.regions[regionId] = new Region(regionId, continent)
   }
 }
 
@@ -196,6 +196,7 @@ Bot.prototype.setupWastelands = function setupWastelands (data) {
 
     // this really shouldn't be hard coded
     region.troopCount = 6
+    region.superRegion.wastelands++
   }
 }
 
@@ -230,10 +231,16 @@ Bot.prototype.updateMap = function updateMap (data) {
 Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
   // drop the time left
   data.shift()
-  var randomRegion = shuffle(data).slice(0, 1)
+
+  var bot = this
+  var leastWastelands = data.sort(function sortRegions (a, b) {
+    var left = bot.map.getRegionById(parseInt(a, 10)).superRegion.wastelands
+    var right = bot.map.getRegionById(parseInt(b, 10)).superRegion.wastelands
+    return left - right
+  }).slice(0, 1)
 
   // parse to string
-  return '' + randomRegion
+  return '' + leastWastelands
 }
 
 /**
