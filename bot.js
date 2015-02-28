@@ -313,7 +313,7 @@ Bot.prototype.attackTransfer = function attackTransfer () {
     var neighbors = shuffle(region.neighbors)
 
     // attack neighboring enemy / neutral region if troopCount > 6
-    if (region.troopCount > 4) {
+    if (region.troopCount >= 4) {
       // shuffle the neighbours for some randomness
       for (n in neighbors) {
         // continue with the next iteration if n is a property of the neighbors array,
@@ -327,7 +327,7 @@ Bot.prototype.attackTransfer = function attackTransfer () {
 
         // attack with all available troops if target region is not owned by bot
         if (this.options.your_bot !== targetRegion.owner) {
-          if (region.troopCount > (n.troopCount * (10 / 7))) {
+          if (region.troopCount > (targetRegion.troopCount * (10 / 7))) {
             moves.push([region.id, targetRegion.id, region.troopCount - 1])
             region.troopCount = 1
             break
