@@ -1,6 +1,6 @@
 {
   "name": "zenwarbot",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "description": "mah boot",
   "main": "index.js",
   "directories": {
