@@ -384,7 +384,11 @@ Bot.prototype.attackTransfer = function attackTransfer () {
  * @param Array data
  */
 Bot.prototype.opponentMoves = function opponentMoves (data) {
-  process.stderr.write('opponentMoves:', data)
+  process.stderr.write('opponentMoves:' +  data + '\n')
+}
+
+Bot.prototype.setupOpponentStartingRegions = function setupOpponentStartingRegions(data) {
+  process.stderr.write('setupOpponentStartingRegions:' +  data + '\n')
 }
 
 function shuffle (arr) {
