@@ -50,6 +50,7 @@ Bot.prototype.processLine = function processLine (data) {
 }
 
 Bot.prototype.processCommand = function processCommand (command, data) {
+  var start = process.hrtime()
   switch (command) {
     case 'settings':
       this.processSetting(data.shift(), data)
@@ -66,10 +67,12 @@ Bot.prototype.processCommand = function processCommand (command, data) {
         }
       } else {
         process.stderr.write(
-          'Unable to execute command: ' + camelCommand + ' with data: ' + data
+          'Unable to execute command: ' + camelCommand + ' with data: ' + data + '\n'
         )
       }
   }
+  var end = process.hrtime(start)
+  process.stderr.write('turn took: ' + ((end[0] * 1e6) + (end[1] / 1e3)) + 'μs\n')
 }
 
 Bot.prototype.processSetting = function processSetting (setting, value) {
