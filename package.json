@@ -7,11 +7,13 @@
     "test": "test"
   },
   "scripts": {
-    "build": "npm run test && npm run package",
+    "build": "npm run clean && npm install && npm run test && npm run package",
+    "clean": "find . -depth -type d -name 'node_modules' -delete",
     "watch": "nodemon -e js,eslintrc,json --exec 'npm run test'",
     "test": "eslint . && tap test/**/*.js",
-    "package": "npm run bump && rm ../zenwarbot.zip && zip -r ../zenwarbot ./*",
-    "bump": "npm version major"
+    "package": "npm run bump && npm prune --production && npm run zip",
+    "bump": "npm version major",
+    "zip": "rm ../zenwarbot.zip && zip -r ../zenwarbot ./*"
   },
   "repository": {
     "type": "git",
