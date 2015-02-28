@@ -1,11 +1,11 @@
 var assert = require('assert')
 var util = require('util')
-var Bot = require('../../bot.js')
+var createBot = require('../../bot.js')
 
 var TIMEBANK = 234980
 var line = util.format('settings timebank %s', TIMEBANK)
 
-var bot = new Bot()
+var bot = createBot()
 
 bot.processLine(line)
 

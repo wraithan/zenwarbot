@@ -1,11 +1,11 @@
 var assert = require('assert')
 var util = require('util')
-var Bot = require('../../bot.js')
+var createBot = require('../../bot.js')
 
 var MY_BOT_NAME = "Jim"
 var line = util.format('settings your_bot %s', MY_BOT_NAME)
 
-var bot = new Bot()
+var bot = createBot()
 
 bot.processLine(line)
 

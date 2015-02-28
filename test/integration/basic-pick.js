@@ -1,5 +1,6 @@
+var assert = require('assert')
 var through = require('through')
-var Bot = require('../../bot')
+var bot = require('../../bot')
 
 var input = (
   'settings timebank 10000\n' +
@@ -19,9 +20,24 @@ var input = (
   'pick_starting_region 10000 5 9 12 18\n'
 )
 
+var CHOICES = [5, 9, 12, 18]
+var lineCount = 0
 var inputStream = through()
-var bot = new Bot(inputStream, through(function (line) {
-  console.error(line)
+
+bot(inputStream, through(function handleLine (line) {
+  lineCount++
+  assert.strictEqual(
+    line[line.length - 1],
+    '\n',
+    'response should end with newline'
+  )
+  var reply = parseInt(line.trim(), 10)
+  assert.strictEqual(isNaN(reply), false, 'response should parse to a number')
+  assert.ok(CHOICES.indexOf(reply) !== -1, 'response should be in choices')
 }))
 
 inputStream.write(input)
+
+process.on('exit', function handleExit () {
+  assert.equal(lineCount, 1, 'should only be 1 response')
+})

@@ -3,7 +3,11 @@ var GameMap = require('./map/Map.js')
 var SuperRegion = require('./map/SuperRegion.js')
 var Region = require('./map/Region.js')
 
-module.exports = Bot
+module.exports = initBot
+
+function initBot(input, output) {
+  return new Bot(input, output)
+}
 
 /**
  * Main class
@@ -11,7 +15,7 @@ module.exports = Bot
  */
 function Bot (input, output) {
   if (!(this instanceof Bot)) {
-    return new Bot()
+    return new Bot(input, output)
   }
 
   // Will have a stream in real life, but might not have one in testing
@@ -40,7 +44,7 @@ Bot.prototype.processLine = function processLine (data) {
   if (lineParts.length === 0) {
     return
   }
-  debugger
+
   this.processCommand(lineParts.shift(), lineParts)
 
 }
@@ -58,7 +62,7 @@ Bot.prototype.processCommand = function processCommand (command, data) {
         var response = this[camelCommand](data)
 
         if (response && response.length > 0) {
-          this.output.write(response)
+          this.output.write(response + '\n')
         }
       } else {
         process.stderr.write(
