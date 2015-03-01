@@ -324,7 +324,7 @@ Bot.prototype.placeArmies = function placeArmies () {
       placements[k].join(' ')
     )
 
-    if (i < placements.length - 1) {
+    if (k < placements.length - 1) {
       parsedPlacements += ', '
     }
   }
