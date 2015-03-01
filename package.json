@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/wraithan/zenwarbot",
   "dependencies": {
+    "es6-collections": "^0.5.1",
     "split": "^0.3.3"
   },
   "devDependencies": {

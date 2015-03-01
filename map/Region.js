@@ -19,15 +19,29 @@ function Region (id, superRegion) {
   this.isOnSuperRegionBorder = false
 }
 
-Region.prototype.anyNeighbors = function anyNeighbors(opponent) {
+Region.prototype.anyNeighbors = function anyNeighbors(type) {
   var found = false
-  for (var n in this.neighbors) {
-    if (n.owner === opponent) {
+  var neighbor
+  for (var i = 0; i < this.neighbors.length; ++i) {
+    neighbor = this.neighbors[i]
+    if (neighbor.owner === type) {
       found = true
       break
     }
   }
   return found
+}
+
+Region.prototype.filterNeighbors = function filterNeighbors(type) {
+  var result = []
+  var neighbor
+  for (var i = 0; i < this.neighbors.length; ++i) {
+    neighbor = this.neighbors[i]
+    if (neighbor.owner === type) {
+      result.push(neighbor)
+    }
+  }
+  return result
 }
 
 module.exports = Region

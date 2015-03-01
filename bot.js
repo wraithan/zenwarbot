@@ -1,3 +1,4 @@
+require('es6-collections')
 var split = require('split')
 var GameMap = require('./map/Map.js')
 var SuperRegion = require('./map/SuperRegion.js')
@@ -272,15 +273,37 @@ Bot.prototype.go = function go (data) {
  * @return string
  */
 Bot.prototype.placeArmies = function placeArmies () {
-  var i,
-    region,
-    parsedPlacements = '',
-    placements = [],
-    regionIndex = 0,
-    troopsRemaining = parseInt(this.options.starting_armies, 10),
-    ownedRegions = this.map.getOwnedRegions(this.options.your_bot)
+  var region
+  var parsedPlacements = ''
+  var placements = []
+  var regionIndex = 0
+  var troopsRemaining = parseInt(this.options.starting_armies, 10)
+  var ownedRegions = this.map.getOwnedRegions(this.options.your_bot)
+  var enemyRegions = this.map.getOwnedRegions(this.options.opponent_bot)
+  var inNeed = new Set()
+  var enemy
+  var neighboringEnemy
+  var placing = 0
+
+  for (var i = 0; i < enemyRegions.length; ++i) {
+    enemy = enemyRegions[i]
+    neighboringEnemy = enemy.filterNeighbors(this.options.your_bot)
+    for (var j = 0; j < neighboringEnemy.length; ++j) {
+      inNeed.add(neighboringEnemy[j])
+    }
+  }
 
   while (troopsRemaining > 0) {
+    if (inNeed.size) {
+      placing = Math.floor(troopsRemaining / inNeed.size)
+      region = inNeed._values[0]
+      placements.push([region.id, placing])
+      region.troopCount += placing
+      troopsRemaining -= placing
+      inNeed.delete(region)
+      continue
+    }
+
     // get a random region
     regionIndex = Math.floor(Math.random() * ownedRegions.length)
     region = ownedRegions[regionIndex]
@@ -294,8 +317,12 @@ Bot.prototype.placeArmies = function placeArmies () {
   }
 
   // parse the placements
-  for (i = 0; i < placements.length; i++) {
-    parsedPlacements += this.options.your_bot + ' place_armies ' + placements[i].join(' ')
+  for (var k = 0; k < placements.length; k++) {
+    parsedPlacements += (
+      this.options.your_bot +
+      ' place_armies ' +
+      placements[k].join(' ')
+    )
 
     if (i < placements.length - 1) {
       parsedPlacements += ', '
