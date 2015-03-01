@@ -45,13 +45,12 @@ Bot.prototype.processLine = function processLine (data) {
   if (lineParts.length === 0) {
     return
   }
-
   this.processCommand(lineParts.shift(), lineParts)
 
 }
 
 Bot.prototype.processCommand = function processCommand (command, data) {
-  var start = process.hrtime()
+  // var start = process.hrtime()
   switch (command) {
     case 'settings':
       this.processSetting(data.shift(), data)
@@ -72,8 +71,8 @@ Bot.prototype.processCommand = function processCommand (command, data) {
         )
       }
   }
-  var end = process.hrtime(start)
-  process.stderr.write('turn took: ' + ((end[0] * 1e6) + (end[1] / 1e3)) + 'μs\n')
+  // var end = process.hrtime(start)
+  // process.stderr.write('turn took: ' + ((end[0] * 1e6) + (end[1] / 1e3)) + 'μs\n')
 }
 
 Bot.prototype.processSetting = function processSetting (setting, value) {
@@ -211,16 +210,28 @@ Bot.prototype.setupWastelands = function setupWastelands (data) {
  * @param Array data
  */
 Bot.prototype.updateMap = function updateMap (data) {
+  var botName = this.options.your_bot
   // loop through data in sets of three
+  var handled = []
   for (var i = 0; i < data.length; i += 3) {
     // get region by id
-    var region = this.map.getRegionById(parseInt(data[i], 10))
+    var regionId = parseInt(data[i], 10)
+    handled.push(regionId)
+    var region = this.map.getRegionById(regionId)
 
     // update region owner
     region.owner = data[i + 1]
 
     // update troopcount
     region.troopCount = parseInt(data[i + 2], 10)
+  }
+
+  var regions = this.map.getRegions()
+  for (var j = 0; j < regions.length; ++j) {
+    var mapRegion = regions[j]
+    if (handled.indexOf(mapRegion.id) === -1 && mapRegion.owner === botName) {
+      mapRegion.owner = this.options.opponent_bot
+    }
   }
 }
 

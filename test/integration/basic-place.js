@@ -12,8 +12,7 @@ var input = (
   'setup_map regions 1 1 2 1 3 2 4 2\n' +
   'setup_map neighbors 1 2 2 3 3 4\n' +
   'settings starting_pick_amount 1\n' +
-  'update_map 1 player1 2 2 player1 2\n' +
-  'update_map 3 player2 2 4 player2 2\n' +
+  'update_map 1 player1 2 2 player1 2 3 player2 2 4 player2\n' +
   'settings starting_armies 5\n' +
   'go place_armies 10000\n'
 )
@@ -23,7 +22,6 @@ var inputStream = through()
 
 bot(inputStream, through(function handleLine (line) {
   lineCount++
-  console.log(line)
   assert.strictEqual(
     line,
     'player1 place_armies 2 5\n',

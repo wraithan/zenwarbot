@@ -59,5 +59,20 @@ Map.prototype.getOwnedRegions = function getOwnedRegions (owner) {
   return ownedRegions
 }
 
+Map.prototype.getRegions = function getRegions () {
+  if (this._memoizedGetRegions) {
+    return this._memoizedGetRegions
+  }
+
+  var regions = []
+
+  for (var i in this.regions) {
+    regions.push(this.regions[i])
+  }
+
+  this._memoizedGetRegions = regions
+
+  return regions
+}
 
 module.exports = Map
