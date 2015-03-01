@@ -296,6 +296,9 @@ Bot.prototype.placeArmies = function placeArmies () {
   while (troopsRemaining > 0) {
     if (inNeed.size) {
       placing = Math.floor(troopsRemaining / inNeed.size)
+      if (placing === 0) {
+        placing = 1
+      }
       region = inNeed._values[0]
       placements.push([region.id, placing])
       region.troopCount += placing
