@@ -27,10 +27,10 @@
   "homepage": "https://github.com/wraithan/zenwarbot",
   "dependencies": {
     "es6-collections": "^0.5.1",
-    "split": "^0.3.3"
+    "split": "^0.3.3",
+    "through": "^2.3.6"
   },
   "devDependencies": {
-    "tap": "^0.7.1",
-    "through": "^2.3.6"
+    "tap": "^0.7.1"
   }
 }
