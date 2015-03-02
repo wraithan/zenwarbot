@@ -249,7 +249,7 @@ Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
   return this.rankRegions(data)[0]
 }
 
-Bot.prototype.rankRegions = function (regionIds) {
+Bot.prototype.rankRegions = function rankRegions (regionIds) {
   var bot = this
 
   var ranking = regionIds.map(function regionIdToRanking (regionId, index) {
