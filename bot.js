@@ -238,18 +238,21 @@ Bot.prototype.updateMap = function updateMap (data) {
 /**
  * Bot.pickStartingRegion
  * Is used to select initial starting regions.
- * Currently selects six random regions.
  *
  * @param Array data
  * @return String
  */
 Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
-  var bot = this
-
   // drop the time left
   data.shift()
 
-  var ranking = data.map(function regionIdToRanking (regionId, index) {
+  return this.rankRegions(data)[0]
+}
+
+Bot.prototype.rankRegions = function (regionIds) {
+  var bot = this
+
+  var ranking = regionIds.map(function regionIdToRanking (regionId, index) {
     var region = bot.map.getRegionById(parseInt(regionId, 10))
     var value = 100
     value -= region.superRegion.wastelands * 10
@@ -263,10 +266,10 @@ Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
   })
 
   var result = ranking.map(function buildResult (e) {
-    return data[e.index]
+    return regionIds[e.index]
   })
 
-  return '' + result[0]
+  return result
 }
 
 /**

@@ -16,7 +16,7 @@ function Region (id, superRegion) {
   this.owner = PossibleOwners.NEUTRAL
   this.neighbors = []
   this.troopCount = 2
-  this.isOnSuperRegionBorder = false
+  this.superRegion.regions[id] = this
 }
 
 Region.prototype.anyNeighbors = function anyNeighbors(type) {
