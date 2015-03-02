@@ -244,18 +244,29 @@ Bot.prototype.updateMap = function updateMap (data) {
  * @return String
  */
 Bot.prototype.pickStartingRegion = function pickStartingRegion (data) {
+  var bot = this
+
   // drop the time left
   data.shift()
 
-  var bot = this
-  var leastWastelands = data.sort(function sortRegions (a, b) {
-    var left = bot.map.getRegionById(parseInt(a, 10)).superRegion.wastelands
-    var right = bot.map.getRegionById(parseInt(b, 10)).superRegion.wastelands
-    return left - right
-  }).slice(0, 1)
+  var ranking = data.map(function regionIdToRanking (regionId, index) {
+    var region = bot.map.getRegionById(parseInt(regionId, 10))
+    var value = 100
+    value -= region.superRegion.wastelands * 10
+    value -= Object.keys(region.superRegion.regions).length * 5
+    value += region.superRegion.bonus * 3
+    return {index: index, value: value, region: regionId}
+  })
 
-  // parse to string
-  return '' + leastWastelands
+  ranking.sort(function sortByValue (a, b) {
+    return b.value - a.value
+  })
+
+  var result = ranking.map(function buildResult (e) {
+    return data[e.index]
+  })
+
+  return '' + result[0]
 }
 
 /**
