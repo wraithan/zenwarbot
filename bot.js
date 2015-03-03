@@ -418,8 +418,7 @@ Bot.prototype.attackTransfer = function attackTransfer () {
   for (var i = 0; i < ownedRegions.length; i++) {
     var region = ownedRegions[i]
     var neighbors = region.neighbors.slice()
-
-    neighbors.sort(sortByMoveOrder.bind(this.options.opponent_bot))
+    neighbors.sort(sortByMoveOrder.bind(null, this.options.opponent_bot))
     // transfer troops to neighboring friendly region if troopCount > 1
     var anyNeutral = region.anyNeighbors(PossibleOwners.NEUTRAL)
     var anyEnemy = region.anyNeighbors(this.options.opponent_bot)
@@ -443,7 +442,7 @@ Bot.prototype.attackTransfer = function attackTransfer () {
       }
     }
 
-    neighbors.sort(sortByAttackOrder.bind(this.options.your_name))
+    neighbors.sort(sortByAttackOrder.bind(null, this.options.your_name))
     // attack neighboring enemy / neutral region if troopCount > 6
     if (region.troopCount >= 4) {
       // shuffle the neighbours for some randomness
