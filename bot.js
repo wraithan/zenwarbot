@@ -442,17 +442,17 @@ Bot.prototype.attackTransfer = function attackTransfer () {
       }
     }
 
-    neighbors.sort(sortByAttackOrder.bind(null, this.options.your_name))
+    neighbors.sort(sortByAttackOrder.bind(null, this.options.your_bot))
     // attack neighboring enemy / neutral region if troopCount > 6
     if (region.troopCount >= 4) {
       // shuffle the neighbours for some randomness
       for (var j = 0; j < neighbors.length; ++j) {
         // set the target region
-        targetRegion = region.neighbors[j]
+        targetRegion = neighbors[j]
 
         // attack with all available troops if target region is not owned by bot
         if (this.options.your_bot !== targetRegion.owner) {
-          if (region.troopCount > (targetRegion.troopCount * (10 / 7))) {
+          if ((region.troopCount - 1) > (targetRegion.troopCount * (10 / 7))) {
             moves.push([region.id, targetRegion.id, region.troopCount - 1])
             region.troopCount = 1
             break
@@ -490,7 +490,9 @@ Bot.prototype.opponentMoves = function opponentMoves (data) {
 }
 
 Bot.prototype.setupOpponentStartingRegions = function setupOpponentStartingRegions(data) {
-  process.stderr.write('setupOpponentStartingRegions:' + data + '\n')
+  for (var i = 0; i < data.length; i++) {
+    this.map.getRegionById(parseInt(data[i], 10)).owner = this.options.opponent_bot
+  }
 }
 
 function toCamelCase (input) {
