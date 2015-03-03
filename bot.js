@@ -334,19 +334,6 @@ Bot.prototype.placeArmies = function placeArmies () {
   })
 
   while (troopsRemaining > 0) {
-    // if (inNeed.size) {
-    //   placing = Math.floor(troopsRemaining / inNeed.size)
-    //   if (placing === 0) {
-    //     placing = 1
-    //   }
-    //   region = inNeed._values[0]
-    //   placements.push([region.id, placing])
-    //   region.troopCount += placing
-    //   troopsRemaining -= placing
-    //   inNeed.delete(region)
-    //   continue
-    // }
-
     if (inNeed.length >= 1) {
       region = inNeed[0]
       placing = Math.floor(troopsRemaining * 0.8)
@@ -390,13 +377,38 @@ Bot.prototype.placeArmies = function placeArmies () {
   return parsedPlacements
 }
 
-/**
- * Bot.attackTransfer
- * Method to attack another region or transfer troops to allied regions
- *
- * @param Array data
- * @return string
- */
+function sortByAttackOrder(name, a, b) {
+  // default value for enemy
+  var aValue = 2
+  var bValue = 2
+  if (a.owner === name) {
+    // self worth no points
+    aValue = 0
+  } else if (a.owner === PossibleOwners.NEUTRAL) {
+    // neutral worth less than enemy
+    aValue = 1
+  }
+  if (b.owner === name) {
+    // self worth no points
+    bValue = 0
+  } else if (b.owner === PossibleOwners.NEUTRAL) {
+    // neutral worth less than enemy
+    bValue = 1
+  }
+  // descending order
+  return bValue - aValue
+}
+
+function sortByMoveOrder(name, a, b) {
+  var aValue = 0
+  aValue += a.filterNeighbors(name).length * 3
+  aValue += a.filterNeighbors(PossibleOwners.NEUTRAL).length
+  var bValue = 0
+  bValue += b.filterNeighbors(name).length * 3
+  bValue += b.filterNeighbors(PossibleOwners.NEUTRAL).length
+  return bValue - aValue
+}
+
 Bot.prototype.attackTransfer = function attackTransfer () {
   var moves = []
   var ownedRegions = this.map.getOwnedRegions(this.options.your_bot)
@@ -405,35 +417,13 @@ Bot.prototype.attackTransfer = function attackTransfer () {
 
   for (var i = 0; i < ownedRegions.length; i++) {
     var region = ownedRegions[i]
-    var neighbors = shuffle(region.neighbors)
+    var neighbors = region.neighbors.slice()
 
-    // attack neighboring enemy / neutral region if troopCount > 6
-    if (region.troopCount >= 4) {
-      // shuffle the neighbours for some randomness
-      for (n in neighbors) {
-        // continue with the next iteration if n is a property of the neighbors array,
-        // instead of an item in the array
-        if (!region.neighbors.hasOwnProperty(n)) {
-          continue
-        }
-
-        // set the target region
-        targetRegion = region.neighbors[n]
-
-        // attack with all available troops if target region is not owned by bot
-        if (this.options.your_bot !== targetRegion.owner) {
-          if (region.troopCount > (targetRegion.troopCount * (10 / 7))) {
-            moves.push([region.id, targetRegion.id, region.troopCount - 1])
-            region.troopCount = 1
-            break
-          }
-        }
-      }
-    }
-
+    neighbors.sort(sortByMoveOrder.bind(this.options.opponent_bot))
     // transfer troops to neighboring friendly region if troopCount > 1
-    if (region.troopCount > 1 && !region.anyNeighbors(this.options.opponent_bot)) {
-      // shuffle the neighbours for some randomness
+    var anyNeutral = region.anyNeighbors(PossibleOwners.NEUTRAL)
+    var anyEnemy = region.anyNeighbors(this.options.opponent_bot)
+    if (region.troopCount > 1 && !anyNeutral && !anyEnemy) {
       for (n in neighbors) {
         // continue with the next iteration if n is a property of the neighbors array,
         // instead of an item in the array
@@ -449,6 +439,25 @@ Bot.prototype.attackTransfer = function attackTransfer () {
           moves.push([region.id, targetRegion.id, region.troopCount - 1])
           region.troopCount = 1
           break
+        }
+      }
+    }
+
+    neighbors.sort(sortByAttackOrder.bind(this.options.your_name))
+    // attack neighboring enemy / neutral region if troopCount > 6
+    if (region.troopCount >= 4) {
+      // shuffle the neighbours for some randomness
+      for (var j = 0; j < neighbors.length; ++j) {
+        // set the target region
+        targetRegion = region.neighbors[j]
+
+        // attack with all available troops if target region is not owned by bot
+        if (this.options.your_bot !== targetRegion.owner) {
+          if (region.troopCount > (targetRegion.troopCount * (10 / 7))) {
+            moves.push([region.id, targetRegion.id, region.troopCount - 1])
+            region.troopCount = 1
+            break
+          }
         }
       }
     }
@@ -483,18 +492,6 @@ Bot.prototype.opponentMoves = function opponentMoves (data) {
 
 Bot.prototype.setupOpponentStartingRegions = function setupOpponentStartingRegions(data) {
   process.stderr.write('setupOpponentStartingRegions:' + data + '\n')
-}
-
-function shuffle (arr) {
-  for (
-    var j, x, i = arr.length;
-    i;
-    j = parseInt(Math.random() * i, 10), x = arr[--i], arr[i] = arr[j], arr[j] = x
-  ) {
-    continue
-  }
-
-  return arr
 }
 
 function toCamelCase (input) {
