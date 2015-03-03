@@ -1,8 +1,8 @@
-require('es6-collections')
 var split = require('split')
 var GameMap = require('./map/Map.js')
 var SuperRegion = require('./map/SuperRegion.js')
 var Region = require('./map/Region.js')
+var PossibleOwners = require('./map/PossibleOwners.js')
 
 module.exports = initBot
 
@@ -305,43 +305,73 @@ Bot.prototype.placeArmies = function placeArmies () {
   var troopsRemaining = parseInt(this.options.starting_armies, 10)
   var ownedRegions = this.map.getOwnedRegions(this.options.your_bot)
   var enemyRegions = this.map.getOwnedRegions(this.options.opponent_bot)
-  var inNeed = new Set()
+  var inNeed = []
   var enemy
   var neighboringEnemy
   var placing = 0
+
+  ownedRegions.sort(function sortRegions (a, b) {
+    var aValue = a.filterNeighbors(PossibleOwners.NEUTRAL).length
+    var bValue = b.filterNeighbors(PossibleOwners.NEUTRAL).length
+    return bValue - aValue
+  })
 
   for (var i = 0; i < enemyRegions.length; ++i) {
     enemy = enemyRegions[i]
     neighboringEnemy = enemy.filterNeighbors(this.options.your_bot)
     for (var j = 0; j < neighboringEnemy.length; ++j) {
-      inNeed.add(neighboringEnemy[j])
+      var myRegion = neighboringEnemy[j]
+      if (inNeed.indexOf(myRegion) === -1) {
+        inNeed.push(neighboringEnemy[j])
+      }
     }
   }
 
+  inNeed.sort(function sortInNeed (a, b) {
+    var aValue = a.filterNeighbors(PossibleOwners.NEUTRAL).length
+    var bValue = b.filterNeighbors(PossibleOwners.NEUTRAL).length
+    return bValue - aValue
+  })
+
   while (troopsRemaining > 0) {
-    if (inNeed.size) {
-      placing = Math.floor(troopsRemaining / inNeed.size)
-      if (placing === 0) {
-        placing = 1
-      }
-      region = inNeed._values[0]
+    // if (inNeed.size) {
+    //   placing = Math.floor(troopsRemaining / inNeed.size)
+    //   if (placing === 0) {
+    //     placing = 1
+    //   }
+    //   region = inNeed._values[0]
+    //   placements.push([region.id, placing])
+    //   region.troopCount += placing
+    //   troopsRemaining -= placing
+    //   inNeed.delete(region)
+    //   continue
+    // }
+
+    if (inNeed.length >= 1) {
+      region = inNeed[0]
+      placing = Math.floor(troopsRemaining * 0.8)
       placements.push([region.id, placing])
+
       region.troopCount += placing
       troopsRemaining -= placing
-      inNeed.delete(region)
+      inNeed = []
       continue
     }
 
-    // get a random region
-    regionIndex = Math.floor(Math.random() * ownedRegions.length)
+    if (troopsRemaining >= 2) {
+      placing = 2
+    } else {
+      placing = 1
+    }
+
     region = ownedRegions[regionIndex]
 
     // place a single army
-    placements.push([region.id, 1])
+    placements.push([region.id, placing])
 
-    region.troopCount += 1
-    troopsRemaining -= 1
-    regionIndex += 1
+    region.troopCount += placing
+    troopsRemaining -= placing
+    regionIndex = (regionIndex + 1) % ownedRegions.length
   }
 
   // parse the placements

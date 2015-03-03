@@ -24,8 +24,8 @@ bot(inputStream, through(function handleLine (line) {
   lineCount++
   assert.strictEqual(
     line,
-    'player1 place_armies 2 5\n',
-    'should place all troops next to enemy'
+    'player1 place_armies 2 4, player1 place_armies 1 1\n',
+    'should place most troops next to the enemy'
   )
 }))
 
