@@ -26,13 +26,10 @@
   },
   "homepage": "https://github.com/wraithan/zenwarbot",
   "dependencies": {
-    "split": "^0.3.3",
-    "through": "^2.3.6"
+    "split": "^0.3.3"
   },
   "devDependencies": {
-    "tap": "^0.7.1",
-    "tough-cookie": "~0.12.1",
-    "jsdom": "~3.1.2",
-    "request": "~2.53.0"
+    "eslint": "^0.15.1",
+    "tap": "^0.7.1"
   }
 }

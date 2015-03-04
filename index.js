@@ -1,2 +1,4 @@
+var createBot = require('./lib/bot.js')
+
 // __main__
-require('./bot')(process.stdin, process.stdout)
+createBot(process.stdin, process.stdout, process.stderr)
