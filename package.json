@@ -10,7 +10,7 @@
     "release": "npm run build && npm run upload",
     "build": "npm run clean && npm install && npm run test && npm run package",
     "clean": "find . -depth -type d -name 'node_modules' -delete",
-    "watch": "nodemon -e js,eslintrc,json --exec 'npm run test'",
+    "watch": "nodemon -e js,eslintrc,json,txt --exec 'npm run test'",
     "test": "eslint . && node test/run-all.js",
     "package": "npm run bump && npm prune --production && npm run zip",
     "bump": "npm version major",

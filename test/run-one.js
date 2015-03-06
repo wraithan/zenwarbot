@@ -5,12 +5,15 @@ var split = require('split')
 var through = require('through')
 
 if (require.main === module) {
-  runOne(process.argv[2])
+  runOne(process.argv[2], process.stderr)
 }
 
 module.exports = runOne
 
-function runOne (filename) {
+function runOne (filename, logger) {
+  if (logger === undefined) {
+    logger = through()
+  }
   var lastLine
   var expected
   process.on('exit', function assertCorrect () {
@@ -36,5 +39,5 @@ function runOne (filename) {
 
   var op = split().pipe(outputProcesor)
 
-  bot(inputProcessor, op, through())
+  bot(inputProcessor, op, logger)
 }
