@@ -1,4 +1,4 @@
-# http://theaigames.com/competitions/warlight-ai-challenge-2/games/54f961434b5ab25e309e013f/rawdump
+# http://theaigames.com/competitions/warlight-ai-challenge-2/games/54f961434b5ab25e309e013f
 settings timebank 10000
 settings time_per_move 500
 settings max_rounds 60
@@ -63,4 +63,4 @@ go place_armies 10000
 Output from your bot: "player1 place_armies 2 3, player1 place_armies 3 2"
 go attack/transfer 10000
 Output from your bot: "player1 attack/transfer 4 3 1, player1 attack/transfer 2 8 3, player1 attack/transfer 3 12 3"
-# Valid: player1 attack/transfer 4 3 1, player1 attack/transfer 2 8 3 
+# Valid: ![player1 attack/transfer 3 12 ]

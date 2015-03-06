@@ -7,8 +7,7 @@ fs.readdir(path.join(__dirname, 'fodder'), function runFiles (err, files) {
 
   for (var i = 0; i < files.length; ++i) {
     var file = path.join(__dirname, 'fodder', files[i])
-    console.log('Running: %s', file)
+    console.log('Kicked off: %s', file)
     runOne(file)
   }
-  console.log('\nSuccess!')
 })

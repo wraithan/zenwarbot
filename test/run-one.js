@@ -26,7 +26,12 @@ function runOne (filename, logger) {
       assert.equal(
         lastLine.indexOf(not[1]),
         (-1),
-        format('\n"%s"\n\nshould not contain\n\n"%s"\n', lastLine, not[1])
+        format(
+          '\nfile: %s\n\n"%s"\n\nshould not contain\n\n"%s"\n',
+          filename,
+          lastLine,
+          not[1]
+        )
       )
       return
     }
@@ -36,12 +41,26 @@ function runOne (filename, logger) {
       assert.notEqual(
         lastLine.indexOf(fragment[1]),
         (-1),
-        format('\n"%s"\n\nshould contain\n\n"%s"\n', lastLine, fragment[1])
+        format(
+          '\nfile: %s\n\n"%s"\n\nshould contain\n\n"%s"\n',
+          filename,
+          lastLine,
+          fragment[1]
+        )
       )
       return
     }
 
-    assert.equal(lastLine, expected)
+    assert.equal(
+      lastLine,
+      expected,
+      format(
+        '\nfile: %s\n\n"%s"\n\nshould equal\n\n"%s"',
+        filename,
+        lastLine,
+        expected
+      )
+    )
   })
 
   var VALID = '# Valid:'
