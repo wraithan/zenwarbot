@@ -1,4 +1,5 @@
 var assert = require('assert')
+var format = require('util').format
 var fs = require('fs')
 var bot = require('../lib/bot.js')
 var split = require('split')
@@ -10,13 +11,36 @@ if (require.main === module) {
 
 module.exports = runOne
 
+var notContains = /!\[(.*)\]/
+var contains = /\[(.*)\]/
+
 function runOne (filename, logger) {
   if (logger === undefined) {
     logger = through()
   }
   var lastLine
-  var expected
+  var expected = []
   process.on('exit', function assertCorrect () {
+    var not = notContains.exec(expected)
+    if (not) {
+      assert.equal(
+        lastLine.indexOf(not[1]),
+        (-1),
+        format('\n"%s"\n\nshould not contain\n\n"%s"\n', lastLine, not[1])
+      )
+      return
+    }
+
+    var fragment = contains.exec(expected)
+    if (fragment) {
+      assert.notEqual(
+        lastLine.indexOf(fragment[1]),
+        (-1),
+        format('\n"%s"\n\nshould contain\n\n"%s"\n', lastLine, fragment[1])
+      )
+      return
+    }
+
     assert.equal(lastLine, expected)
   })
 
