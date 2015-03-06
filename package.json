@@ -16,7 +16,7 @@
     "bump": "npm version major",
     "zip": "npm run clean-zip && npm run make-zip",
     "clean-zip": "rm ../zenwarbot.zip",
-    "make-zip": "git archive --format=zip HEAD -o ../zenwarbot.zip",
+    "make-zip": "git archive --format=zip HEAD -o ../zenwarbot.zip && zip -r ../zenwarbot.zip node_modules",
     "upload": "npm run git-push && aigames upload ../zenwarbot.zip",
     "git-push": "git push origin master && git push --tags"
   },
