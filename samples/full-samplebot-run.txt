@@ -1,0 +1,270 @@
+settings timebank 10000
+settings time_per_move 500
+settings max_rounds 60
+settings your_bot player1
+settings opponent_bot player2
+setup_map super_regions 1 3 2 7 3 3 4 3 5 1
+setup_map regions 1 1 2 1 3 1 4 1 5 1 6 1 7 2 8 2 9 2 10 2 11 2 12 2 13 2 14 3 15 3 16 3 17 4 18 4 19 4 20 4 21 5 22 5
+setup_map neighbors 1 2,3 2 4,8,3,6,5,10 3 4,5 4 5 5 6,10 6 10 7 9,8,15 8 10,9,11 9 17,11,15,16 10 11,12,21,13 11 17,19,12,21,22 12 21 14 15 15 16,18 16 18,17 17 19,18 19 20,22 21 22
+setup_map wastelands 10 20
+setup_map opponent_starting_regions 18 4
+
+settings starting_armies 5
+update_map 16 player1 2 21 player1 2 9 neutral 2 15 neutral 2 18 player2 2 17 neutral 2 10 neutral 6 11 neutral 2 12 neutral 2 22 neutral 2
+opponent_moves
+Round 1
+go place_armies 10000
+# EXPECTED:  player1 place_armies 16 4, player1 place_armies 21 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 16 18 5
+settings starting_armies 5
+update_map 9 player1 4 16 player1 1 21 player1 3 7 neutral 2 8 neutral 2 17 neutral 2 11 neutral 2 15 neutral 2 18 player2 4 10 neutral 6 12 neutral 2 22 neutral 2
+opponent_moves player2 place_armies 18 2
+Round 2
+go place_armies 10000
+# EXPECTED:  player1 place_armies 16 4, player1 place_armies 9 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 9 11 4,player1 attack/transfer 16 15 4
+settings starting_armies 5
+update_map 7 player1 3 9 player1 1 15 player1 3 16 player1 1 21 player1 3 8 neutral 2 17 neutral 2 11 neutral 2 14 neutral 2 18 player2 8 10 neutral 6 12 neutral 2 22 neutral 2
+opponent_moves player2 place_armies 18 2 player2 place_armies 18 2
+Round 3
+go place_armies 10000
+# EXPECTED:  player1 place_armies 15 4, player1 place_armies 21 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 15 14 6,player1 attack/transfer 21 11 3
+settings starting_armies 8
+update_map 7 player1 3 9 player1 1 11 player1 2 14 player1 5 15 player1 1 16 player1 1 21 player1 1 8 neutral 2 17 player2 4 10 neutral 6 19 neutral 2 12 neutral 2 22 neutral 2 18 player2 6
+opponent_moves player2 place_armies 18 2 player2 place_armies 18 1 player2 attack/transfer 18 17 5
+Round 4
+go place_armies 10000
+# EXPECTED:  player1 place_armies 11 6, player1 place_armies 11 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 11 17 9,player1 attack/transfer 14 15 4
+settings starting_armies 8
+update_map 7 player1 3 8 player1 8 9 player1 1 11 player1 1 14 player1 1 15 player1 5 16 player1 1 21 player1 1 2 neutral 2 10 neutral 6 17 player2 6 19 neutral 2 12 neutral 2 22 neutral 2 18 player2 8
+opponent_moves player2 place_armies 17 2 player2 place_armies 18 2 player2 attack/transfer 17 18 5 player2 attack/transfer 18 17 5
+Round 5
+go place_armies 10000
+# EXPECTED:  player1 place_armies 11 6, player1 place_armies 11 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 7 9 2,player1 attack/transfer 8 2 7,player1 attack/transfer 11 17 8
+settings starting_armies 5
+update_map 2 player1 6 7 player1 1 8 player1 1 9 player1 3 11 player1 5 14 player1 1 15 player1 5 21 player1 1 1 neutral 2 4 player2 4 3 player2 6 6 neutral 2 5 neutral 2 10 neutral 1 17 player2 1 16 player2 4 19 neutral 2 12 neutral 2 22 neutral 2 18 player2 11
+opponent_moves player2 place_armies 18 2 player2 place_armies 18 1 player2 attack/transfer 17 18 5 player2 attack/transfer 18 16 5
+Round 6
+go place_armies 10000
+# EXPECTED:  player1 place_armies 2 4, player1 place_armies 2 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 2 1 10,player1 attack/transfer 11 10 4
+settings starting_armies 5
+update_map 1 player1 9 2 player1 1 7 player1 1 8 player1 1 9 player1 3 10 player1 3 11 player1 1 14 player1 1 15 player1 2 21 player1 1 3 player2 7 4 player2 6 6 neutral 2 5 neutral 2 17 player2 4 16 player2 1 12 neutral 2 13 neutral 2 19 neutral 2 22 neutral 2 18 player2 9
+opponent_moves player2 place_armies 18 2 player2 place_armies 3 2 player2 place_armies 4 1 player2 attack/transfer 3 4 5 player2 attack/transfer 4 3 4 player2 attack/transfer 16 17 3 player2 attack/transfer 18 15 5
+Round 7
+go place_armies 10000
+# EXPECTED:  player1 place_armies 11 4, player1 place_armies 10 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 10 5 3,player1 attack/transfer 11 19 4
+settings starting_armies 5
+update_map 1 player1 9 5 player1 2 7 player1 1 8 player1 1 9 player1 3 10 player1 1 11 player1 1 14 player1 1 15 player1 2 19 player1 3 21 player1 1 2 player2 4 3 player2 10 4 player2 1 6 neutral 2 17 player2 6 16 player2 6 12 neutral 2 13 neutral 2 22 neutral 2 18 player2 4 20 neutral 6
+opponent_moves player2 place_armies 3 2 player2 place_armies 17 2 player2 place_armies 3 1 player2 attack/transfer 3 2 5 player2 attack/transfer 4 3 5 player2 attack/transfer 17 16 5 player2 attack/transfer 18 17 5
+Round 8
+go place_armies 10000
+# EXPECTED:  player1 place_armies 10 4, player1 place_armies 10 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 8,player1 attack/transfer 10 2 5
+settings starting_armies 5
+update_map 1 player1 1 2 player1 12 5 player1 2 7 player1 1 8 player1 1 9 player1 3 10 player1 1 11 player1 1 14 player1 1 15 player1 2 19 player1 3 21 player1 1 3 player2 8 4 player2 8 6 neutral 2 17 player2 4 16 player2 9 12 neutral 2 13 neutral 2 22 neutral 2 18 player2 6 20 neutral 6
+opponent_moves player2 place_armies 4 2 player2 place_armies 17 2 player2 place_armies 17 1 player2 attack/transfer 2 3 3 player2 attack/transfer 3 4 5 player2 attack/transfer 16 18 5 player2 attack/transfer 17 16 5 player2 attack/transfer 18 16 3
+Round 9
+go place_armies 10000
+# EXPECTED:  player1 place_armies 11 4, player1 place_armies 10 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 2 4 11,player1 attack/transfer 11 12 4
+settings starting_armies 5
+update_map 2 player1 4 7 player1 1 8 player1 1 10 player1 2 11 player1 1 12 player1 3 14 player1 1 15 player1 2 19 player1 3 21 player1 1 1 player2 4 4 player2 1 3 player2 3 6 neutral 2 5 player2 2 9 player2 3 13 neutral 2 17 player2 6 22 neutral 2 16 player2 7 18 player2 3 20 neutral 6
+opponent_moves player2 place_armies 18 2 player2 place_armies 4 2 player2 place_armies 4 1 player2 attack/transfer 3 1 5 player2 attack/transfer 4 5 3 player2 attack/transfer 16 9 5 player2 attack/transfer 17 16 3 player2 attack/transfer 18 17 5
+Round 10
+go place_armies 10000
+# EXPECTED:  player1 place_armies 10 4, player1 place_armies 10 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 2 4 3,player1 attack/transfer 10 5 6,player1 attack/transfer 12 10 2
+settings starting_armies 5
+update_map 2 player1 1 5 player1 5 7 player1 1 8 player1 1 10 player1 3 11 player1 1 12 player1 1 14 player1 1 15 player1 2 19 player1 3 21 player1 1 1 player2 1 4 player2 4 3 player2 4 6 neutral 2 9 player2 11 13 neutral 2 17 player2 5 22 neutral 2 16 player2 4 18 player2 1 20 neutral 6
+opponent_moves player2 place_armies 17 2 player2 place_armies 3 2 player2 place_armies 3 1 player2 attack/transfer 1 3 3 player2 attack/transfer 3 4 5 player2 attack/transfer 9 16 2 player2 attack/transfer 16 9 5 player2 attack/transfer 17 9 5 player2 attack/transfer 18 17 2
+Round 11
+go place_armies 10000
+# EXPECTED:  player1 place_armies 19 4, player1 place_armies 19 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 5 6 4,player1 attack/transfer 19 17 7
+settings starting_armies 5
+update_map 2 player1 1 5 player1 1 6 player1 3 7 player1 1 8 player1 1 10 player1 3 11 player1 1 12 player1 1 14 player1 1 19 player1 4 21 player1 1 1 player2 5 4 player2 1 3 player2 6 9 player2 8 15 player2 4 13 neutral 2 17 player2 4 22 neutral 2 20 neutral 6
+opponent_moves player2 place_armies 4 2 player2 place_armies 9 2 player2 place_armies 3 1 player2 attack/transfer 3 1 4 player2 attack/transfer 4 3 5 player2 attack/transfer 9 15 5 player2 attack/transfer 16 17 3
+Round 12
+go place_armies 10000
+# EXPECTED:  player1 place_armies 19 4, player1 place_armies 19 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 6 2 2,player1 attack/transfer 19 17 8
+settings starting_armies 5
+update_map 2 player1 3 5 player1 1 6 player1 1 7 player1 1 8 player1 1 10 player1 3 11 player1 1 12 player1 1 14 player1 1 17 player1 2 19 player1 1 21 player1 1 1 player2 1 4 player2 6 3 player2 5 9 player2 6 15 player2 1 13 neutral 2 22 neutral 2 18 player2 5 16 player2 3 20 neutral 6
+opponent_moves player2 place_armies 9 2 player2 attack/transfer 1 3 4 player2 attack/transfer 3 4 5 player2 attack/transfer 9 17 5 player2 attack/transfer 15 18 3
+Round 13
+go place_armies 10000
+# EXPECTED:  player1 place_armies 11 4, player1 place_armies 19 1
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 11 22 4
+settings starting_armies 6
+update_map 2 player1 3 5 player1 1 6 player1 1 7 player1 1 8 player1 1 10 player1 3 11 player1 1 12 player1 1 14 player1 1 17 player1 2 19 player1 2 21 player1 1 22 player1 3 1 player2 6 4 player2 2 3 player2 7 9 player2 3 15 player2 8 13 neutral 2 18 player2 1 16 player2 5 20 neutral 6
+opponent_moves player2 place_armies 9 2 player2 place_armies 3 2 player2 place_armies 4 1 player2 attack/transfer 3 1 5 player2 attack/transfer 4 3 5 player2 attack/transfer 9 15 5 player2 attack/transfer 16 15 2 player2 attack/transfer 18 16 4
+Round 14
+go place_armies 10000
+# EXPECTED:  player1 place_armies 2 4, player1 place_armies 10 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 2 4 6,player1 attack/transfer 10 13 4,player1 attack/transfer 22 11 2
+settings starting_armies 6
+update_map 4 player1 4 5 player1 1 6 player1 1 8 player1 1 10 player1 1 11 player1 3 12 player1 1 13 player1 3 14 player1 1 17 player1 2 19 player1 2 21 player1 1 22 player1 1 2 player2 4 3 player2 11 7 player2 4 9 player2 1 15 player2 9 18 player2 1 16 player2 1 20 neutral 6
+opponent_moves player2 place_armies 3 2 player2 place_armies 3 2 player2 place_armies 4 1 player2 attack/transfer 1 3 5 player2 attack/transfer 3 2 5 player2 attack/transfer 9 15 2 player2 attack/transfer 15 7 5 player2 attack/transfer 16 15 4
+Round 15
+go place_armies 10000
+# EXPECTED:  player1 place_armies 4 4, player1 place_armies 19 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 4 2 7,player1 attack/transfer 13 10 2
+settings starting_armies 6
+update_map 2 player1 4 4 player1 1 6 player1 1 8 player1 1 10 player1 3 11 player1 3 12 player1 1 13 player1 1 14 player1 1 17 player1 2 19 player1 4 21 player1 1 22 player1 1 1 player2 1 3 player2 6 5 player2 4 7 player2 1 9 player2 6 15 player2 4 18 player2 2 16 player2 8 20 neutral 6
+opponent_moves player2 place_armies 16 2 player2 place_armies 9 2 player2 place_armies 18 1 player2 attack/transfer 3 5 5 player2 attack/transfer 7 9 3 player2 attack/transfer 15 16 5
+Round 16
+go place_armies 10000
+# EXPECTED:  player1 place_armies 2 4, player1 place_armies 19 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 2 1 7
+settings starting_armies 6
+update_map 2 player1 4 4 player1 1 6 player1 1 8 player1 1 10 player1 3 11 player1 3 12 player1 1 13 player1 1 14 player1 1 17 player1 2 19 player1 6 21 player1 1 22 player1 1 1 player2 2 3 player2 4 5 player2 1 7 player2 1 9 player2 8 15 player2 4 18 player2 5 16 player2 8 20 neutral 6
+opponent_moves player2 place_armies 9 2 player2 place_armies 18 2 player2 place_armies 15 1 player2 attack/transfer 3 1 5 player2 attack/transfer 5 3 3 player2 attack/transfer 9 16 5 player2 attack/transfer 15 18 4 player2 attack/transfer 16 9 5 player2 attack/transfer 18 15 3
+Round 17
+go place_armies 10000
+# EXPECTED:  player1 place_armies 2 4, player1 place_armies 19 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 2 1 7
+settings starting_armies 6
+update_map 1 player1 6 2 player1 1 4 player1 1 6 player1 1 8 player1 1 10 player1 3 11 player1 3 12 player1 1 13 player1 1 14 player1 1 17 player1 2 19 player1 8 21 player1 1 22 player1 1 3 player2 1 5 player2 6 7 player2 7 9 player2 8 15 player2 1 18 player2 4 16 player2 9 20 neutral 6
+opponent_moves player2 place_armies 16 2 player2 place_armies 3 2 player2 place_armies 7 1 player2 attack/transfer 3 5 5 player2 attack/transfer 9 7 5 player2 attack/transfer 15 18 3 player2 attack/transfer 16 9 5 player2 attack/transfer 18 16 4
+Round 18
+go place_armies 10000
+# EXPECTED:  player1 place_armies 1 4, player1 place_armies 19 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 3 9,player1 attack/transfer 19 20 9
+settings starting_armies 6
+update_map 1 player1 1 2 player1 1 3 player1 5 4 player1 1 6 player1 1 8 player1 1 10 player1 3 12 player1 1 13 player1 1 14 player1 1 17 player1 2 19 player1 6 21 player1 1 22 player1 1 5 player2 1 7 player2 4 9 player2 5 11 player2 3 15 player2 9 18 player2 6 16 player2 5 20 neutral 1
+opponent_moves player2 place_armies 7 2 player2 place_armies 9 2 player2 place_armies 16 1 player2 attack/transfer 5 3 5 player2 attack/transfer 7 15 5 player2 attack/transfer 9 11 5 player2 attack/transfer 16 18 5 player2 attack/transfer 18 15 3
+Round 19
+go place_armies 10000
+# EXPECTED:  player1 place_armies 19 4, player1 place_armies 19 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 3 5 4,player1 attack/transfer 19 11 11
+settings starting_armies 9
+update_map 1 player1 1 2 player1 1 3 player1 1 4 player1 1 5 player1 3 6 player1 1 8 player1 1 10 player1 3 11 player1 9 12 player1 1 13 player1 1 14 player1 1 17 player1 2 19 player1 1 21 player1 1 22 player1 1 7 player2 6 9 player2 5 15 player2 16 18 player2 6 16 player2 1 20 neutral 1
+opponent_moves player2 place_armies 15 2 player2 place_armies 7 2 player2 place_armies 9 1 player2 attack/transfer 7 15 5 player2 attack/transfer 9 7 5 player2 attack/transfer 15 18 5 player2 attack/transfer 16 9 4 player2 attack/transfer 18 15 5
+Round 20
+go place_armies 10000
+# EXPECTED:  player1 place_armies 8 7, player1 place_armies 19 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 5 2 2,player1 attack/transfer 8 9 7,player1 attack/transfer 10 2 2,player1 attack/transfer 11 9 8
+settings starting_armies 9
+update_map 1 player1 1 2 player1 5 3 player1 1 4 player1 1 5 player1 1 6 player1 1 8 player1 1 9 player1 14 10 player1 1 11 player1 1 12 player1 1 13 player1 1 14 player1 1 17 player1 2 19 player1 3 21 player1 1 22 player1 1 7 player2 4 15 player2 20 16 player2 13 18 player2 1 20 neutral 1
+opponent_moves player2 place_armies 16 2 player2 place_armies 7 2 player2 place_armies 7 1 player2 attack/transfer 7 15 5 player2 attack/transfer 9 15 4 player2 attack/transfer 15 16 5 player2 attack/transfer 18 16 5
+Round 21
+go place_armies 10000
+# EXPECTED:  player1 place_armies 9 7, player1 place_armies 19 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 2 1 4,player1 attack/transfer 9 7 20,player1 attack/transfer 19 20 4
+settings starting_armies 9
+update_map 1 player1 5 2 player1 1 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 19 8 player1 1 10 player1 1 11 player1 1 12 player1 1 13 player1 1 14 player1 1 17 player1 2 19 player1 1 20 player1 3 21 player1 1 22 player1 1 9 player2 9 15 player2 21 18 player2 1 16 player2 10
+opponent_moves player2 place_armies 7 2 player2 place_armies 16 2 player2 place_armies 15 1 player2 attack/transfer 7 15 5 player2 attack/transfer 15 9 5 player2 attack/transfer 16 9 5
+Round 22
+go place_armies 10000
+# EXPECTED:  player1 place_armies 7 7, player1 place_armies 11 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 4,player1 attack/transfer 7 9 25,player1 attack/transfer 20 19 2
+settings starting_armies 9
+update_map 1 player1 1 2 player1 5 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 1 9 player1 22 10 player1 1 11 player1 3 12 player1 1 13 player1 1 14 player1 1 19 player1 3 20 player1 1 21 player1 1 22 player1 1 8 player2 4 15 player2 17 17 player2 4 16 player2 12
+opponent_moves player2 place_armies 16 2 player2 place_armies 18 2 player2 place_armies 15 1 player2 attack/transfer 9 8 5 player2 attack/transfer 15 16 5 player2 attack/transfer 16 17 5
+Round 23
+go place_armies 10000
+# EXPECTED:  player1 place_armies 2 7, player1 place_armies 10 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 2 8 11,player1 attack/transfer 9 8 21
+settings starting_armies 16
+update_map 1 player1 1 2 player1 7 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 1 8 player1 17 9 player1 1 10 player1 3 11 player1 3 12 player1 1 13 player1 1 19 player1 3 20 player1 1 21 player1 1 22 player1 1 15 player2 13 17 player2 1 16 player2 12
+opponent_moves player2 place_armies 8 2 player2 place_armies 8 2 player2 place_armies 15 1 player2 attack/transfer 15 14 5 player2 attack/transfer 16 9 5 player2 attack/transfer 17 16 3 player2 attack/transfer 18 16 2
+Round 24
+go place_armies 10000
+# EXPECTED:  player1 place_armies 7 12, player1 place_armies 9 2, player1 place_armies 1 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 2,player1 attack/transfer 2 1 6,player1 attack/transfer 8 2 16,player1 attack/transfer 10 2 2
+settings starting_armies 9
+update_map 1 player1 7 2 player1 21 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 13 8 player1 1 10 player1 1 11 player1 3 12 player1 1 13 player1 1 19 player1 3 20 player1 1 21 player1 1 22 player1 1 9 player2 3 15 player2 18 17 player2 3
+opponent_moves player2 place_armies 15 2 player2 place_armies 16 2 player2 place_armies 17 2 player2 attack/transfer 14 15 3 player2 attack/transfer 15 9 5 player2 attack/transfer 16 15 5
+Round 25
+go place_armies 10000
+# EXPECTED:  player1 place_armies 7 7, player1 place_armies 10 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 6,player1 attack/transfer 2 1 20,player1 attack/transfer 7 9 19,player1 attack/transfer 10 2 2
+settings starting_armies 16
+update_map 1 player1 21 2 player1 9 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 1 8 player1 1 9 player1 15 10 player1 1 11 player1 3 12 player1 1 13 player1 1 19 player1 3 20 player1 1 21 player1 1 22 player1 1 15 player2 17 17 player2 1 16 player2 12
+opponent_moves player2 place_armies 15 2 player2 place_armies 15 2 player2 attack/transfer 9 16 2 player2 attack/transfer 15 18 5 player2 attack/transfer 16 9 5 player2 attack/transfer 17 16 2 player2 attack/transfer 18 16 2
+Round 26
+go place_armies 10000
+# EXPECTED:  player1 place_armies 7 12, player1 place_armies 9 2, player1 place_armies 1 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 22,player1 attack/transfer 2 1 8,player1 attack/transfer 9 17 16
+settings starting_armies 16
+update_map 1 player1 9 2 player1 23 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 13 8 player1 1 9 player1 1 10 player1 1 11 player1 3 12 player1 1 13 player1 1 17 player1 10 19 player1 3 20 player1 1 21 player1 1 22 player1 1 15 player2 18 16 player2 7 18 player2 11
+opponent_moves player2 place_armies 17 2 player2 place_armies 17 2 player2 place_armies 15 2 player2 place_armies 15 2 player2 attack/transfer 14 15 2 player2 attack/transfer 15 18 5 player2 attack/transfer 16 18 5 player2 attack/transfer 18 17 5
+Round 27
+go place_armies 10000
+# EXPECTED:  player1 place_armies 7 12, player1 place_armies 10 2, player1 place_armies 1 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 10,player1 attack/transfer 2 1 22,player1 attack/transfer 10 2 2,player1 attack/transfer 11 8 2,player1 attack/transfer 19 11 2
+settings starting_armies 16
+update_map 1 player1 23 2 player1 13 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 22 8 player1 3 9 player1 1 10 player1 1 11 player1 3 12 player1 1 13 player1 1 17 player1 7 19 player1 1 20 player1 1 21 player1 1 22 player1 1 15 player2 20 16 player2 6 18 player2 8
+opponent_moves player2 place_armies 18 2 player2 place_armies 16 2 player2 place_armies 15 2 player2 place_armies 16 2 player2 attack/transfer 15 7 5 player2 attack/transfer 16 17 5 player2 attack/transfer 18 15 5
+Round 28
+go place_armies 10000
+# EXPECTED:  player1 place_armies 7 12, player1 place_armies 10 2, player1 place_armies 1 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 24,player1 attack/transfer 2 1 12,player1 attack/transfer 7 15 33,player1 attack/transfer 8 2 2,player1 attack/transfer 10 2 2,player1 attack/transfer 11 8 2
+settings starting_armies 16
+update_map 1 player1 13 2 player1 29 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 14 8 player1 3 9 player1 1 10 player1 1 11 player1 1 12 player1 1 13 player1 1 17 player1 7 19 player1 1 20 player1 1 21 player1 1 22 player1 1 15 player2 8 16 player2 7 18 player2 3
+opponent_moves player2 place_armies 16 2 player2 place_armies 16 2 player2 place_armies 16 2 player2 attack/transfer 15 7 5 player2 attack/transfer 16 15 5 player2 attack/transfer 18 15 5
+Round 29
+go place_armies 10000
+# EXPECTED:  player1 place_armies 7 12, player1 place_armies 10 2, player1 place_armies 1 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 14,player1 attack/transfer 2 1 28,player1 attack/transfer 7 15 25,player1 attack/transfer 8 2 2,player1 attack/transfer 10 2 2,player1 attack/transfer 17 18 6
+settings starting_armies 16
+update_map 1 player1 29 2 player1 19 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 1 8 player1 1 9 player1 1 10 player1 1 11 player1 1 12 player1 1 13 player1 1 15 player1 20 17 player1 2 19 player1 1 20 player1 1 21 player1 1 22 player1 1 16 player2 9 14 player2 6 18 player2 3
+opponent_moves player2 place_armies 16 2 player2 place_armies 18 2 player2 place_armies 18 2 player2 attack/transfer 14 15 4 player2 attack/transfer 15 14 5 player2 attack/transfer 16 18 5 player2 attack/transfer 18 16 5
+Round 30
+go place_armies 10000
+# EXPECTED:  player1 place_armies 15 12, player1 place_armies 10 2, player1 place_armies 1 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 30,player1 attack/transfer 2 1 18,player1 attack/transfer 10 2 2,player1 attack/transfer 15 14 31
+settings starting_armies 16
+update_map 1 player1 19 2 player1 33 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 1 8 player1 1 9 player1 1 10 player1 1 11 player1 1 12 player1 1 13 player1 1 14 player1 22 15 player1 1 17 player1 2 19 player1 1 20 player1 1 21 player1 1 22 player1 1 16 player2 8 18 player2 1
+opponent_moves player2 place_armies 14 2 player2 place_armies 18 2 player2 place_armies 14 1 player2 attack/transfer 16 15 5 player2 attack/transfer 18 16 4
+Round 31
+go place_armies 10000
+# EXPECTED:  player1 place_armies 9 12, player1 place_armies 11 2, player1 place_armies 1 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 20,player1 attack/transfer 2 1 32,player1 attack/transfer 9 16 12,player1 attack/transfer 11 8 2,player1 attack/transfer 14 15 21
+settings starting_armies 19
+update_map 1 player1 33 2 player1 21 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 1 8 player1 3 9 player1 1 10 player1 1 11 player1 1 12 player1 1 13 player1 1 14 player1 1 15 player1 22 16 player1 6 17 player1 2 19 player1 1 20 player1 1 21 player1 1 22 player1 1 18 player2 4
+opponent_moves player2 place_armies 16 2 player2 place_armies 18 2 player2 place_armies 18 1 player2 attack/transfer 16 9 5
+Round 32
+go place_armies 10000
+# EXPECTED:  player1 place_armies 15 15, player1 place_armies 11 2, player1 place_armies 1 2
+go attack/transfer 10000
+# EXPECTED:  player1 attack/transfer 1 2 34,player1 attack/transfer 2 1 20,player1 attack/transfer 8 2 2,player1 attack/transfer 11 8 2,player1 attack/transfer 15 18 36,player1 attack/transfer 16 18 5
+settings starting_armies 22
+update_map 1 player1 21 2 player1 37 3 player1 1 4 player1 1 5 player1 1 6 player1 1 7 player1 1 8 player1 3 9 player1 1 10 player1 1 11 player1 1 12 player1 1 13 player1 1 14 player1 1 15 player1 1 16 player1 1 17 player1 2 18 player1 35 19 player1 1 20 player1 1 21 player1 1 22 player1 1
+opponent_moves player2 place_armies 18 2 player2 place_armies 18 2 player2 place_armies 18 1

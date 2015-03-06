@@ -10,7 +10,7 @@
     "build": "npm run clean && npm install && npm run test && npm run package",
     "clean": "find . -depth -type d -name 'node_modules' -delete",
     "watch": "nodemon -e js,eslintrc,json --exec 'npm run test'",
-    "test": "eslint . && tap test/**/*.js",
+    "test": "eslint . && node test/run-all.js",
     "package": "npm run bump && npm prune --production && npm run zip",
     "bump": "npm version major",
     "zip": "rm ../zenwarbot.zip && zip -r ../zenwarbot ./*"
@@ -26,10 +26,11 @@
   },
   "homepage": "https://github.com/wraithan/zenwarbot",
   "dependencies": {
-    "split": "^0.3.3"
+    "split": "^0.3.3",
+    "through": "~2.3.6"
   },
   "devDependencies": {
     "eslint": "^0.15.1",
-    "tap": "^0.7.1"
+    "nodemon": "^1.3.7"
   }
 }

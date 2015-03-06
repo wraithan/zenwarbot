@@ -1,0 +1,14 @@
+var fs = require('fs')
+var path = require('path')
+var runOne = require('./run-one.js')
+
+fs.readdir(path.join(__dirname, 'fodder'), function runFiles (err, files) {
+  if (err) throw new Error(err)
+
+  for (var i = 0; i < files.length; ++i) {
+    var file = path.join(__dirname, 'fodder', files[i])
+    console.log('Running: %s', file)
+    runOne(file)
+  }
+  console.log('\nSuccess!')
+})
