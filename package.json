@@ -7,13 +7,18 @@
     "test": "test"
   },
   "scripts": {
+    "release": "npm run build && npm run upload",
     "build": "npm run clean && npm install && npm run test && npm run package",
     "clean": "find . -depth -type d -name 'node_modules' -delete",
     "watch": "nodemon -e js,eslintrc,json --exec 'npm run test'",
     "test": "eslint . && node test/run-all.js",
     "package": "npm run bump && npm prune --production && npm run zip",
     "bump": "npm version major",
-    "zip": "rm ../zenwarbot.zip && zip -r ../zenwarbot ./*"
+    "zip": "npm run clean-zip && npm run make-zip",
+    "clean-zip": "rm ../zenwarbot.zip",
+    "make-zip": "git archive --format=zip HEAD -o ../zenwarbot.zip",
+    "upload": "npm run git-push && aigames upload ../zenwarbot.zip",
+    "git-push": "git push origin master && git push --tags"
   },
   "repository": {
     "type": "git",
