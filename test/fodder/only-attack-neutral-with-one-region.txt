@@ -66,4 +66,4 @@ Output from your bot: "player1 place_armies 9 3, player1 place_armies 5 3"
 go attack/transfer 10000
 Output from your bot: "player1 attack/transfer 2 1 1, player1 attack/transfer 6 17 6, player1 attack/transfer 9 7 3, player1 attack/transfer 5 7 3"
 
-# Valid: ![player1 attack/transfer 5 7]
+# Valid: ![player1 attack/transfer 9 7]
