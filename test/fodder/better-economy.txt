@@ -12,4 +12,4 @@ settings starting_regions 1 4 9 11 18 21 26 28 36 37 45 55 58
 settings starting_pick_amount 6
 pick_starting_region 10000 1 9 11 18 21 26 28 36 37 45 55 58
 Output from your bot: "1"
-# Valid: 21
+# Valid: 9
